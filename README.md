@@ -1,49 +1,59 @@
-# Auto Blogger
+# Auto-Blogger AI 🤖
 
-A fully automated, AI-powered blog built with Eleventy and GitHub Actions. Every week, a GitHub Action runs a script that uses the free Google Gemini API to generate a new blog post on "Technology and Programming" or "Artificial Intelligence and Future Trends", commits it to the repository, and GitHub Pages automatically deploys the updated site.
+An fully autonomous, highly premium blog platform powered by **Astro**, **Google Gemini 2.5 Flash**, and **GitHub Actions**.
 
-## Stack
-- **Static Site Generator:** [Eleventy (11ty)](https://www.11ty.dev/)
-- **AI Integration:** Google Gemini API (`@google/genai`)
-- **Automation & Hosting:** GitHub Actions & GitHub Pages
+This project automatically researches, writes, and publishes reliable, highly factual blog posts three times a week using a multi-persona AI generation engine.
 
-## Local Setup
+## ✨ Features
 
-1. **Install Dependencies:**
-   \`\`\`bash
-   npm install
-   \`\`\`
+- **Blazing Fast**: Built on the [Astro](https://astro.build) web framework for zero-JS-by-default static site generation.
+- **Autonomous Generation**: The `generate-post.js` script uses the Gemini SDK and Google Search grounding to produce factual, high-quality Markdown posts.
+- **Novelty Safeguard**: The engine automatically scans existing posts in `src/content/blog/` to ensure no topics are ever repeated.
+- **Dynamic Featured Images**: The engine intelligently searches Wikimedia Commons for open-source images, with fallbacks to Unsplash and Pexels (if API keys are provided) and Placehold.co for guaranteed image generation.
+- **Tri-Weekly Scheduling**: GitHub Actions run on a cron schedule to publish new content automatically:
+  - **Tuesday**: Technical Writer (Deep dives into frameworks and technical concepts).
+  - **Thursday**: Content Writer (Engaging educational material and tech trends).
+  - **Sunday**: Journalist (Reporting on recent tech/AI news breakthroughs).
 
-2. **Set up Environment Variables:**
-   Create a \`.env\` file in the root directory and add your Gemini API Key:
-   \`\`\`env
-   GEMINI_API_KEY=your_api_key_here
-   \`\`\`
-   *(You can get a free key from Google AI Studio)*
+## 🚀 Getting Started
 
-3. **Generate a Post Manually:**
-   \`\`\`bash
-   node generate-post.js
-   \`\`\`
-   This will create a new markdown file in \`src/posts/\`.
+### 1. Prerequisites
+- Node.js (v20+ recommended)
+- A [Google Gemini API Key](https://aistudio.google.com/)
 
-4. **Run the Site Locally:**
-   \`\`\`bash
-   npx @11ty/eleventy --serve
-   \`\`\`
-   The site will be available at \`http://localhost:8080\`.
+### 2. Local Setup
 
-## GitHub Actions Automation
+Clone the repository and install dependencies:
+\`\`\`bash
+npm install
+\`\`\`
 
-To make the blog run automatically on GitHub:
+Create a \`.env\` file in the root of your project:
+\`\`\`env
+GEMINI_API_KEY="your-api-key-here"
+\`\`\`
 
-1. Push this code to a new GitHub repository.
-2. Go to **Settings > Secrets and variables > Actions** in your repository.
-3. Click **New repository secret**.
-4. Name it \`GEMINI_API_KEY\` and paste your API key as the value.
-5. Go to **Settings > Pages**.
-6. Under **Build and deployment > Source**, select **GitHub Actions**.
+Start the Astro development server:
+\`\`\`bash
+npm run dev
+\`\`\`
+The site will be available at \`http://localhost:4321\`.
 
-### Workflows
-- **Generate Weekly Blog Post (\`.github/workflows/autopost.yml\`):** Runs every Monday at midnight. It generates a new post using the Gemini API and commits it back to the repository.
-- **Deploy to GitHub Pages (\`.github/workflows/deploy.yml\`):** Runs every time a commit is pushed to \`main\` (including the automated commits from the action above). It builds the Eleventy site and deploys it.
+### 3. Generating a Post Manually
+
+You can manually trigger the AI to write and save a new post at any time. Just run:
+\`\`\`bash
+node generate-post.js [persona]
+\`\`\`
+*(Available personas: \`technical-writer\`, \`content-writer\`, \`journalist\`)*
+
+The AI will generate the post in \`src/content/blog/\` using Astro's strict Zod frontmatter schema. If the dev server is running, Astro will automatically rebuild the site in milliseconds and live-reload your browser!
+
+### 4. Deployment
+
+This blog is configured to deploy automatically to **GitHub Pages**. 
+Just ensure you have added your \`GEMINI_API_KEY\` to your repository's **GitHub Action Secrets**.
+
+The GitHub Actions workflows will handle:
+- Nightly content generation (\`autopost.yml\`).
+- Astro site building and Pages deployment (\`deploy.yml\`).

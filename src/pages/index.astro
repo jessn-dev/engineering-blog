@@ -1,0 +1,365 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import '../styles/home.css';
+
+const [titleFirst, titleAccent] = SITE_TITLE.split('.');
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const allCategories = new Set<string>();
+posts.forEach(post => {
+	if (post.data.categories && post.data.categories.length > 0) {
+		post.data.categories.forEach(c => allCategories.add(c));
+	} else if (post.data.category) {
+		allCategories.add(post.data.category);
+	}
+});
+const uniqueCategories = Array.from(allCategories).sort();
+
+const categoryCounts = new Map<string, number>();
+posts.forEach(post => {
+	const cats = post.data.categories && post.data.categories.length > 0
+		? post.data.categories
+		: (post.data.category ? [post.data.category] : []);
+	cats.forEach(c => categoryCounts.set(c, (categoryCounts.get(c) || 0) + 1));
+});
+
+// Data handed to the client-side interactive console
+const consoleData = {
+	posts: posts.map((p, i) => ({
+		n: i + 1,
+		title: p.data.title,
+		slug: p.id,
+		date: p.data.pubDate.toISOString().slice(0, 10),
+	})),
+	categories: uniqueCategories,
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
+			<filter id="noiseFilter">
+				<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+			</filter>
+			<rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+		</svg>
+		<Header />
+		<main>
+			<section class="hero-tech" id="hero-tech">
+				<div class="hero-bg-grid" id="hero-bg-grid"></div>
+				<div class="hero-inner">
+
+					<!-- ── LEFT: Typography + CTAs ─────────────────────── -->
+					<div class="hero-left">
+						<h1 class="hero-headline">
+							<span class="hl-line hl-l1"><span class="hero-hl-accent">Thoughtful</span></span>
+							<span class="hl-line hl-l2"><span class="hero-hl-accent">articles.</span></span>
+							<span class="hl-line hl-l3">Practical guides</span>
+							<!--<span class="hl-line hl-l4">guides.</span>-->
+							<span class="hl-line hl-l5">real impact.</span>
+						</h1>
+
+						<p class="hero-copy">
+							In-depth articles on <span class="highlight-pill">consumer electronics</span>, <span class="highlight-pill">software dev</span>, and <span class="highlight-pill">cybersecurity</span>. Plus emerging tech trends and practical guides that help you <strong class="highlight-text">build, secure, and ship</strong> better software.
+						</p>
+
+						<div class="hero-actions">
+							<a href="#feed-section" class="btn-primary">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+								Read Articles
+							</a>
+							<a href="https://www.jbn-dev.com/" target="_blank" class="btn-secondary">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+								Portfolio
+							</a>
+							<a href="https://github.com/jessn-dev" target="_blank" class="btn-secondary">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+								GitHub
+							</a>
+						</div>
+
+						<aside class="hero-side-note">
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="side-note-icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+							<p>Articles &amp; thoughts from a <span class="note-highlight">developer who cares</span> about design.</p>
+						</aside>
+					</div>
+
+					<!-- ── RIGHT: Orbital Knowledge System ──────────────── -->
+					<div class="hero-right">
+						<div class="status-badge orbital-status-badge">
+							<span class="status-dot"></span>
+							<span>System Builder / Reading Latest Articles</span>
+						</div>
+						<div class="orbital-system" id="orbital-system" aria-hidden="true">
+
+							<!-- Background stars -->
+							<svg class="orbital-stars-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="30" cy="45" r="0.8" fill="rgba(255,255,255,0.45)"/>
+								<circle cx="85" cy="18" r="1.0" fill="rgba(255,255,255,0.35)"/>
+								<circle cx="15" cy="122" r="0.6" fill="rgba(255,255,255,0.3)"/>
+								<circle cx="62" cy="90" r="0.9" fill="rgba(255,255,255,0.25)"/>
+								<circle cx="115" cy="38" r="0.7" fill="rgba(255,255,255,0.4)"/>
+								<circle cx="375" cy="22" r="1.0" fill="rgba(255,255,255,0.4)"/>
+								<circle cx="420" cy="58" r="0.7" fill="rgba(255,255,255,0.3)"/>
+								<circle cx="452" cy="28" r="0.8" fill="rgba(255,255,255,0.25)"/>
+								<circle cx="462" cy="112" r="0.6" fill="rgba(255,255,255,0.35)"/>
+								<circle cx="398" cy="82" r="0.9" fill="rgba(255,255,255,0.2)"/>
+								<circle cx="467" cy="198" r="0.7" fill="rgba(255,255,255,0.3)"/>
+								<circle cx="458" cy="278" r="0.8" fill="rgba(255,255,255,0.25)"/>
+								<circle cx="472" cy="352" r="0.6" fill="rgba(255,255,255,0.2)"/>
+								<circle cx="422" cy="418" r="1.0" fill="rgba(255,255,255,0.35)"/>
+								<circle cx="385" cy="458" r="0.7" fill="rgba(255,255,255,0.3)"/>
+								<circle cx="448" cy="402" r="0.8" fill="rgba(255,255,255,0.25)"/>
+								<circle cx="62" cy="448" r="0.9" fill="rgba(255,255,255,0.4)"/>
+								<circle cx="28" cy="398" r="0.7" fill="rgba(255,255,255,0.3)"/>
+								<circle cx="92" cy="432" r="0.6" fill="rgba(255,255,255,0.2)"/>
+								<circle cx="18" cy="362" r="0.8" fill="rgba(255,255,255,0.25)"/>
+								<circle cx="12" cy="248" r="0.7" fill="rgba(255,255,255,0.35)"/>
+								<circle cx="148" cy="58" r="0.8" fill="rgba(255,255,255,0.2)"/>
+								<circle cx="298" cy="48" r="0.7" fill="rgba(255,255,255,0.15)"/>
+								<circle cx="338" cy="428" r="0.9" fill="rgba(255,255,255,0.25)"/>
+								<circle cx="142" cy="438" r="0.6" fill="rgba(255,255,255,0.2)"/>
+								<!-- cross markers -->
+								<line x1="232" y1="36" x2="248" y2="36" stroke="rgba(123,125,255,0.2)" stroke-width="1"/>
+								<line x1="240" y1="28" x2="240" y2="44" stroke="rgba(123,125,255,0.2)" stroke-width="1"/>
+								<line x1="432" y1="224" x2="448" y2="224" stroke="rgba(123,125,255,0.15)" stroke-width="0.8"/>
+								<line x1="440" y1="216" x2="440" y2="232" stroke="rgba(123,125,255,0.15)" stroke-width="0.8"/>
+								<line x1="26" y1="168" x2="38" y2="168" stroke="rgba(123,125,255,0.12)" stroke-width="0.8"/>
+								<line x1="32" y1="162" x2="32" y2="174" stroke="rgba(123,125,255,0.12)" stroke-width="0.8"/>
+								<line x1="430" y1="338" x2="442" y2="338" stroke="rgba(123,125,255,0.1)" stroke-width="0.8"/>
+								<line x1="436" y1="332" x2="436" y2="344" stroke="rgba(123,125,255,0.1)" stroke-width="0.8"/>
+							</svg>
+
+							<!-- Orbit rings + BH glow -->
+							<svg class="orbital-rings-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+								<defs>
+									<radialGradient id="bh-glow-grad" cx="50%" cy="50%" r="50%">
+										<stop offset="0%"   stop-color="#7B7DFF" stop-opacity="0.38"/>
+										<stop offset="40%"  stop-color="#5B5EE8" stop-opacity="0.12"/>
+										<stop offset="100%" stop-color="#7B7DFF" stop-opacity="0"/>
+									</radialGradient>
+								</defs>
+								<circle cx="240" cy="240" r="90" fill="url(#bh-glow-grad)" class="bh-ambient-svg"/>
+								<!-- rings outer → inner so inner paints on top -->
+								<circle class="orbit-ring ring-5" cx="240" cy="240" r="228" stroke-dasharray="3 7"/>
+								<circle class="orbit-ring ring-4" cx="240" cy="240" r="195"/>
+								<circle class="orbit-ring ring-3" cx="240" cy="240" r="158"/>
+								<circle class="orbit-ring ring-2" cx="240" cy="240" r="118"/>
+								<circle class="orbit-ring ring-1" cx="240" cy="240" r="75"/>
+							</svg>
+
+							<!-- Black hole -->
+							<div class="bh-wrapper">
+								<div class="bh-ring-outer"></div>
+								<div class="bh-ring-mid"></div>
+								<div class="bh-core">
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(160,168,255,0.5)" stroke-width="1.5" stroke-linecap="round">
+										<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+									</svg>
+								</div>
+							</div>
+
+							<!-- ORBIT 1: Emerging Tech — r=75, 18s CW, θ=270° (top) -->
+							<!-- delay = -18 * 270/360 = -13.5s -->
+							<div class="orbit-arm arm-1" style="--dur:18s;--delay:-13.5s;--radius:75px;">
+								<div class="orbital-node" data-category="Emerging Technology" data-ring="1" role="button" tabindex="0" aria-label="Browse Emerging Technology articles">
+									<div class="node-float">
+										<div class="node-circle">
+											<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.5-2 4-2 4s2.5-.5 4-2l10-10-2-2-10 10z"/><path d="M20 4s0 3-2 5l-7 7-2-2 7-7c2-2 4-3 4-3z"/><circle cx="19" cy="5" r="2"/></svg>
+										</div>
+									</div>
+									<span class="node-label">Emerging<br>Tech</span>
+								</div>
+							</div>
+
+							<!-- ORBIT 2: Consumer Electronics — r=118, 25s CCW, θ=180° (left) -->
+							<!-- CCW delay = -25 * (360-180)/360 = -12.5s -->
+							<div class="orbit-arm arm-2 arm-ccw" style="--dur:25s;--delay:-12.5s;--radius:118px;">
+								<div class="orbital-node" data-category="Consumer Electronics" data-ring="2" role="button" tabindex="0" aria-label="Browse Consumer Electronics articles">
+									<div class="node-float">
+										<div class="node-circle">
+											<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+										</div>
+									</div>
+									<span class="node-label">Consumer<br>Electronics</span>
+								</div>
+							</div>
+
+							<!-- ORBIT 3: Software Development — r=158, 40s CW, θ=210° (bottom-left) -->
+							<!-- delay = -40 * 210/360 = -23.3s -->
+							<div class="orbit-arm arm-3" style="--dur:40s;--delay:-23.3s;--radius:158px;">
+								<div class="orbital-node" data-category="Software Development" data-ring="3" role="button" tabindex="0" aria-label="Browse Software Development articles">
+									<div class="node-float">
+										<div class="node-circle">
+											<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+										</div>
+									</div>
+									<span class="node-label">Software<br>Development</span>
+								</div>
+							</div>
+
+							<!-- ORBIT 4: Cybersecurity — r=195, 55s CCW, θ=0° (right) -->
+							<!-- CCW delay = -55 * (360-0)/360 = 0s -->
+							<div class="orbit-arm arm-4 arm-ccw" style="--dur:55s;--delay:0s;--radius:195px;">
+								<div class="orbital-node" data-category="Cybersecurity" data-ring="4" role="button" tabindex="0" aria-label="Browse Cybersecurity articles">
+									<div class="node-float">
+										<div class="node-circle">
+											<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+										</div>
+									</div>
+									<span class="node-label">Cybersecurity</span>
+								</div>
+							</div>
+
+							<!-- ORBIT 5: How-To Guides — r=228, 70s CW, θ=120° (bottom-right) -->
+							<!-- delay = -70 * 120/360 = -23.3s -->
+							<div class="orbit-arm arm-5" style="--dur:70s;--delay:-23.3s;--radius:228px;">
+								<div class="orbital-node" data-category="Practical Guides" data-ring="5" role="button" tabindex="0" aria-label="Browse How-To Guide articles">
+									<div class="node-float">
+										<div class="node-circle">
+											<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+										</div>
+									</div>
+									<span class="node-label">How-To<br>Guides</span>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</section>
+
+			<section class="feed-section" id="feed-section">
+				<div class="feed-header">
+					<h2>Latest Articles <sup class="super-text">({posts.length})</sup></h2>
+				</div>
+
+				<div class="feed-layout">
+					<div class="feed-sidebar">
+						<details class="filter-group" open>
+							<summary class="table-header">
+								<span class="text-smallcaps">/ Filters</span>
+								<svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+							</summary>
+							<ul class="filter-list">
+								<li><button class="filter-btn text-smallcaps active" data-filter="all">
+									<span class="filter-label">All Topics</span>
+									<span class="filter-count">{posts.length}</span>
+								</button></li>
+								{uniqueCategories.map(category => (
+									<li><button class="filter-btn text-smallcaps" data-filter={category}>
+										<span class="filter-label">{category}</span>
+										<span class="filter-count">{categoryCounts.get(category) || 0}</span>
+									</button></li>
+								))}
+							</ul>
+						</details>
+						<div class="hero-art-console">
+							<div class="art-header">
+								<span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+								<span class="art-title">sys_init.sh</span>
+							</div>
+							<div class="art-body" id="hero-art-body"></div>
+						</div>
+					</div>
+
+					<div class="feed-list-container">
+
+						<ul class="article-list">
+							{posts.map((post) => (
+								<li class="article-item" data-accordion data-categories={JSON.stringify(post.data.categories || (post.data.category ? [post.data.category] : []))}>
+									<button class="article-link accordion-trigger" aria-expanded="false">
+										<div class="name-col">
+											<h3 class="article-title">{post.data.title}</h3>
+										</div>
+										<div class="date-col text-smallcaps">
+											<FormattedDate date={post.data.pubDate} />
+										</div>
+										<div class="arrow-col">
+											<svg viewBox="0 0 24 24" class="hover-arrow plus-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<line x1="12" y1="5" x2="12" y2="19"></line>
+												<line x1="5" y1="12" x2="19" y2="12"></line>
+											</svg>
+											<svg viewBox="0 0 24 24" class="hover-arrow minus-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<line x1="5" y1="12" x2="19" y2="12"></line>
+											</svg>
+										</div>
+									</button>
+									<div class="article-content">
+										<div class="article-content-inner">
+											<div style="padding-top: 0.5rem;">
+												<p class="article-summary">{post.data.description || 'Exploring new frontiers in tech and design.'}</p>
+												<div class="article-meta">
+													{(post.data.categories && post.data.categories.length > 0) ? (
+														post.data.categories.map((cat: string) => <span class="tag text-smallcaps">{cat}</span>)
+													) : post.data.category ? (
+														<span class="tag text-smallcaps">{post.data.category}</span>
+													) : null}
+													<a href={`/blog/${post.id}/`} class="tag text-smallcaps read-more-link">Read Post &rarr;</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+							))}
+						</ul>
+						
+						<div class="pagination-controls" style="display: none; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+							<button id="page-prev" class="btn-secondary text-smallcaps" style="min-width: 100px;" disabled>&larr; Prev</button>
+							<span id="page-indicator" class="text-smallcaps" style="color: var(--text-muted);">Page 1 / 1</span>
+							<button id="page-next" class="btn-secondary text-smallcaps" style="min-width: 100px;">Next &rarr;</button>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+		<Footer />
+
+		<!-- Interactive Console -->
+		<button class="term-toggle" id="term-toggle" aria-label="Open console" aria-expanded="false">
+			<span class="term-toggle-icon">&gt;_</span>
+			<span class="term-toggle-label">console</span>
+			<kbd class="term-toggle-key">~</kbd>
+		</button>
+
+		<div class="term" id="term" role="dialog" aria-label="Interactive console" aria-hidden="true">
+			<div class="term-bar">
+				<div class="term-dots">
+					<span class="term-dot red"></span>
+					<span class="term-dot yellow"></span>
+					<span class="term-dot green"></span>
+				</div>
+				<span class="term-title">jesse@ngolab — ~/blog</span>
+				<button class="term-close" id="term-close" aria-label="Close console">&times;</button>
+			</div>
+			<div class="term-body" id="term-body" tabindex="0">
+				<div class="term-output" id="term-output"></div>
+				<div class="term-input-line">
+					<span class="term-prompt">visitor@jbn<span class="term-prompt-sep">:</span>~$</span>
+					<input class="term-input" id="term-input" type="text" autocomplete="off"
+						autocapitalize="off" spellcheck="false" aria-label="Console input" />
+				</div>
+			</div>
+		</div>
+
+		<script type="application/json" id="console-data" set:html={JSON.stringify(consoleData)}></script>
+
+		<script>
+			import '../scripts/home.ts';
+			import '../scripts/orbital.ts';
+		</script>
+	</body>
+</html>

@@ -1,0 +1,117 @@
+---
+import { SITE_TITLE } from '../consts';
+---
+
+<header class="stripe-header">
+	<nav class="stripe-nav">
+		<div class="nav-left">
+			<a href="/" class="nav-logo" aria-label="Home">
+				jbn.blog
+			</a>
+			<a href="/" class="nav-button active">
+				<span class="hotkey">[B]</span>Blog
+			</a>
+			<a href="https://www.jbn-dev.com/" target="_blank" class="nav-button">
+				<span class="hotkey">[P]</span>Portfolio
+			</a>
+			<a href="https://github.com/jessn-dev" target="_blank" class="nav-button">
+				<span class="hotkey">[G]</span>Github
+			</a>
+			<a href="https://www.linkedin.com/in/jessengolab/" target="_blank" class="nav-button">
+				<span class="hotkey">[L]</span>LinkedIn
+			</a>
+		</div>
+	</nav>
+</header>
+
+<style>
+	.stripe-header {
+		width: 100%;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		position: sticky;
+		top: 0;
+		z-index: 1000;
+	}
+	
+	.stripe-nav {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+		display: flex;
+		align-items: center;
+		height: 48px;
+	}
+
+	.nav-left {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		width: 100%;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+	.nav-left::-webkit-scrollbar {
+		display: none;
+	}
+
+	.nav-logo {
+		font-family: 'Outfit', sans-serif;
+		font-size: 1.1rem;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 2rem;
+		transition: opacity 0.2s;
+	}
+	.nav-logo:hover {
+		opacity: 0.7;
+	}
+
+	.nav-button {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.9rem;
+		font-weight: 500;
+		letter-spacing: -0.01em;
+		display: flex;
+		align-items: center;
+		color: rgba(255, 255, 255, 0.65);
+		text-decoration: none;
+		padding: 0.4rem 0.8rem;
+		border-radius: 6px;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+	}
+	
+	.nav-button:hover {
+		background: rgba(255, 255, 255, 0.06);
+		color: #fff;
+	}
+	
+	.nav-button.active {
+		background: rgba(129, 140, 248, 0.12);
+		color: #818cf8;
+	}
+
+	.hotkey {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.8em;
+		color: rgba(255, 255, 255, 0.3);
+		font-weight: 400;
+		margin-right: 0.4rem;
+	}
+
+	@media (max-width: 768px) {
+		.stripe-nav {
+			padding: 0 1rem;
+		}
+		.nav-logo {
+			margin-right: 0.5rem;
+		}
+	}
+</style>
