@@ -18,7 +18,7 @@ This project automatically researches, writes, and publishes reliable, highly fa
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
-- Node.js (v20+ recommended)
+- Node.js (v22.12.0+ required)
 - A [Google Gemini API Key](https://aistudio.google.com/)
 
 ### 2. Local Setup
