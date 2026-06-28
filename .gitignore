@@ -17,6 +17,10 @@ pnpm-debug.log*
 .env
 .env.production
 
+# Internal AI configuration files
+AGENTS.md
+CLAUDE.md
+
 # macOS-specific files
 .DS_Store
 
