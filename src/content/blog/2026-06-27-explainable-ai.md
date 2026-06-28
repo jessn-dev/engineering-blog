@@ -1,4 +1,5 @@
 ---
+slug: "2026-06-27-content-writer-1782522228865"
 pubDate: "2026-06-27T01:03:48.864Z"
 heroImage: "https://upload.wikimedia.org/wikipedia/commons/3/37/Overview_of_TalkToModel_for_explainable_AI_conclusion-making.webp"
 heroImageAttribution: "Authors of the study: Dylan Slack, Satyapriya Krishna, Himabindu Lakkaraju &amp; Sameer Singh, CC BY 4.0 via Wikimedia Commons"

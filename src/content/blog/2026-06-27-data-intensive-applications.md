@@ -1,4 +1,5 @@
 ---
+slug: "2026-06-27-book-reviewer-manual"
 title: "Architecting the Future: A Deep Dive into 'Designing Data-Intensive Applications'"
 description: "An in-depth review of Martin Kleppmann's seminal book on system design, exploring its core concepts, relevance to modern architecture, and why every software engineer should read it."
 categories: ["Software Engineering", "System Design", "Book Review"]

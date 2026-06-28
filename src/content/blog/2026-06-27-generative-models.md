@@ -1,4 +1,5 @@
 ---
+slug: "2026-06-27-journalist-1782522187074"
 pubDate: "2026-06-27T01:03:07.074Z"
 heroImage: "https://upload.wikimedia.org/wikipedia/commons/6/64/Dall-e_3_%28jan_%2724%29_artificial_intelligence_icon.png"
 heroImageAttribution: "JPxG, Public domain via Wikimedia Commons"

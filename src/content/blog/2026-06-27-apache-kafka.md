@@ -1,4 +1,5 @@
 ---
+slug: "2026-06-27-technical-writer-1782522210028"
 pubDate: "2026-06-27T01:03:30.026Z"
 heroImage: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Kafka_Batch_processing.jpg"
 heroImageAttribution: "SparkDatabox, CC BY-SA 4.0 via Wikimedia Commons"

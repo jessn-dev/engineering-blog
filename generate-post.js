@@ -95,6 +95,13 @@ CRITICAL REQUIREMENTS FOR RELIABILITY:
 - Your persona is ${personaType}. Write in the tone appropriate for this persona.
 ${avoidTopicsStr}
 
+CRITICAL RULES FOR HUMANIZED WRITING (ANTI-AI SLOP):
+- The writing MUST NOT read like "AI slop". It must be heavily humanized, reading naturally and flowing with varied rhythms.
+- Eliminate robotic, overly formal, and predictable patterns typical of AI tools.
+- NEVER use the words or phrases: "In conclusion", "Delve", "Dive into", "Furthermore", "Moreover", "Additionally", "Crucial", "It's important to note", "In this article".
+- The goal is to make the content engaging and completely undetectable to AI checkers.
+- Write conversationally as if you (the persona) are speaking directly to a peer.
+
 QUALITY & CONTENT GUIDELINES (Must follow strictly):
 - Writing quality: Ensure the text is highly readable, clearly structured, and easy to understand.
 - Consistency: Write as if this is part of a regularly updated, high-quality publication.
@@ -278,11 +285,11 @@ heroImageAttribution: "${imageData.attribution}"
       fs.mkdirSync(postsDir, { recursive: true });
     }
 
-    // Create a filename based on the current date and time
+    // Create a shorthand filename using the date and the searchKeyword
     const date = new Date();
     const dateString = date.toISOString().split("T")[0];
-    const timeString = date.getTime();
-    const filename = `${dateString}-${personaType}-${timeString}.md`;
+    const shorthandSlug = searchKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const filename = `${dateString}-${shorthandSlug}.md`;
     const filepath = path.join(postsDir, filename);
 
     // Save the file

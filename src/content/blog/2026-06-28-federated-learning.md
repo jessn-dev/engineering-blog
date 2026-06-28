@@ -1,4 +1,5 @@
 ---
+slug: "2026-06-28-journalist-1782612309296"
 pubDate: "2026-06-28T02:05:09.295Z"
 heroImage: "https://upload.wikimedia.org/wikipedia/commons/d/de/Federated_learning_%28horizontal_vs._vertical.png"
 heroImageAttribution: "MarcT0K (icons by JGraph), CC BY-SA 4.0 via Wikimedia Commons"
