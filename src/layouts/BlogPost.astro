@@ -197,6 +197,28 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageAttributio
 			.prose li {
 				margin-bottom: 0.5rem;
 			}
+			.prose table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 2rem 0;
+				font-size: 0.95rem;
+				display: block;
+				overflow-x: auto;
+			}
+			.prose th, .prose td {
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				padding: 0.6rem 0.9rem;
+				text-align: left;
+				vertical-align: top;
+			}
+			.prose th {
+				background: rgba(255, 255, 255, 0.06);
+				color: #fff;
+				font-weight: 600;
+			}
+			.prose tbody tr:nth-child(even) {
+				background: rgba(255, 255, 255, 0.02);
+			}
 		</style>
 	</head>
 

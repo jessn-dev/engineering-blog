@@ -4,6 +4,7 @@ on:
   schedule:
     # Runs at 13:00 UTC (8:00 AM Central Time) on Tuesday (2), Thursday (4), Saturday (6), and Sunday (0)
     - cron: '0 13 * * 2'
+    - cron: '0 13 * * 3'
     - cron: '0 13 * * 4'
     - cron: '0 13 * * 6'
     - cron: '0 13 * * 0'
@@ -19,6 +20,7 @@ on:
           - content-writer
           - journalist
           - book-reviewer
+          - faang-analyst
 
 jobs:
   generate:
@@ -40,6 +42,7 @@ jobs:
       - name: Determine Persona and Generate Post
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           UNSPLASH_API_KEY: ${{ secrets.UNSPLASH_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
         run: |
@@ -51,6 +54,8 @@ jobs:
             DAY=$(date +%w)
             if [ "$DAY" -eq 2 ]; then
               PERSONA="technical-writer"
+            elif [ "$DAY" -eq 3 ]; then
+              PERSONA="faang-analyst"
             elif [ "$DAY" -eq 4 ]; then
               PERSONA="content-writer"
             elif [ "$DAY" -eq 6 ]; then

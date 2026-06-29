@@ -18,6 +18,8 @@ const blog = defineCollection({
 			author: z.string().optional(),
 			category: z.string().optional(),
 			categories: z.array(z.string()).optional(),
+			generatedBy: z.string().optional(),
+			articleType: z.string().optional(),
 		}),
 });
 
