@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-tldeq5d5><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"><meta name="theme-color" content="#1e1b4b"><link rel="icon" type="image/svg+xml" href="/engineering-blog/favicon.svg"><link rel="icon" href="/engineering-blog/favicon.ico"><link rel="sitemap" href="/engineering-blog/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="jbn.blog | Software Engineering &amp; AI" href="/engineering-blog/rss.xml"><meta name="generator" content="Astro v7.0.3"><style>@font-face{font-family:Atkinson-ef4f375a1356a832;src:url("/engineering-blog/_astro/fonts/61a7d313b104d45e.woff2") format("woff2");font-display:swap;font-weight:400;font-style:normal;}@font-face{font-family:Atkinson-ef4f375a1356a832;src:url("/engineering-blog/_astro/fonts/72ead08ab7c51a77.woff2") format("woff2");font-display:swap;font-weight:700;font-style:normal;}@font-face{font-family:"Atkinson-ef4f375a1356a832 fallback: Arial";src:local("Arial");font-display:swap;font-weight:400;font-style:normal;size-adjust:99.3717%;ascent-override:80.1033%;descent-override:25.2587%;line-gap-override:0%;}@font-face{font-family:"Atkinson-ef4f375a1356a832 fallback: Arial Bold";src:local("Arial Bold");font-display:swap;font-weight:700;font-style:normal;size-adjust:92.2954%;ascent-override:86.2448%;descent-override:27.1953%;line-gap-override:0%;}:root{--font-atkinson:Atkinson-ef4f375a1356a832,"Atkinson-ef4f375a1356a832 fallback: Arial","Atkinson-ef4f375a1356a832 fallback: Arial Bold",sans-serif;}</style><link rel="preload" href="/engineering-blog/_astro/fonts/61a7d313b104d45e.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/engineering-blog/_astro/fonts/72ead08ab7c51a77.woff2" as="font" type="font/woff2" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://jessn-dev.github.io/engineering-blog/blog/2026-09-01-distributed-tracing-diagram/"><!-- Primary Meta Tags --><title>Mastering Distributed Tracing with OpenTelemetry for Microservices</title><meta name="description" content="A practical, step-by-step guide to implementing distributed tracing in microservices architectures using OpenTelemetry, enhancing observability and debugging capabilities."><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:site_name" content="jbn.blog | Software Engineering &amp; AI"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jessn-dev.github.io/engineering-blog/blog/2026-09-01-distributed-tracing-diagram/"><meta property="og:title" content="Mastering Distributed Tracing with OpenTelemetry for Microservices"><meta property="og:description" content="A practical, step-by-step guide to implementing distributed tracing in microservices architectures using OpenTelemetry, enhancing observability and debugging capabilities."><meta property="og:image" content="https://images.unsplash.com/photo-1717501218456-c4789b65fc21?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w5ODY1Nzl8MHwxfHNlYXJjaHwxMHx8RGlzdHJpYnV0ZWQlMjBUcmFjaW5nJTIwRGlhZ3JhbXxlbnwwfDB8fHwxNzg4MjgzMDM3fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"><meta property="article:published_time" content="2026-09-01T17:17:44.694Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://jessn-dev.github.io/engineering-blog/blog/2026-09-01-distributed-tracing-diagram/"><meta property="twitter:title" content="Mastering Distributed Tracing with OpenTelemetry for Microservices"><meta property="twitter:description" content="A practical, step-by-step guide to implementing distributed tracing in microservices architectures using OpenTelemetry, enhancing observability and debugging capabilities."><meta property="twitter:image" content="https://images.unsplash.com/photo-1717501218456-c4789b65fc21?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w5ODY1Nzl8MHwxfHNlYXJjaHwxMHx8RGlzdHJpYnV0ZWQlMjBUcmFjaW5nJTIwRGlhZ3JhbXxlbnwwfDB8fHwxNzg4MjgzMDM3fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"><!-- PostHog Analytics --><script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="xi Si init Ni ji pr qi Ui $i capture calculateEventProperties Zi register register_once register_for_session unregister unregister_for_session Yi getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Ki identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty Qi Wi createPersonProfile setInternalOrTestUser Ji Fi tn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing zi debug mr it getPageViewId captureTraceFeedback captureTraceMetric Ri".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_A8vDFLwcViNwfxZ5vdymHafZ3U6KVvxmEe3cEnoRxuC3', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-05-30',
+        person_profiles: 'always',
+        capture_pageleave: true
+    })
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jessn-dev.github.io/engineering-blog/blog/2026-09-01-distributed-tracing-diagram/"},"headline":"Mastering Distributed Tracing with OpenTelemetry for Microservices","description":"A practical, step-by-step guide to implementing distributed tracing in microservices architectures using OpenTelemetry, enhancing observability and debugging capabilities.","image":"https://images.unsplash.com/photo-1717501218456-c4789b65fc21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5ODY1Nzl8MHwxfHNlYXJjaHwxMHx8RGlzdHJpYnV0ZWQlMjBUcmFjaW5nJTIwRGlhZ3JhbXxlbnwwfDB8fHwxNzg4MjgzMDM3fDA&ixlib=rb-4.1.0&q=80&w=1080","datePublished":"2026-09-01T17:17:44.694Z","dateModified":"2026-09-01T17:17:44.694Z","keywords":"Software Development, Engineering, Observability, Microservices, Distributed tracing, OpenTelemetry, Microservices observability, Context propagation, Spans and traces","author":{"@type":"Person","name":"Jesse Ngolab","url":"https://jessn-dev.github.io/engineering-blog/about/","sameAs":["https://www.jbn-dev.com/","https://github.com/jessn-dev","https://www.linkedin.com/in/jessengolab/"]},"publisher":{"@type":"Organization","name":"jbn.blog | Software Engineering & AI","url":"https://jessn-dev.github.io/engineering-blog/"}}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://jessn-dev.github.io/engineering-blog/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://jessn-dev.github.io/engineering-blog/blog/"},{"@type":"ListItem","position":3,"name":"Mastering Distributed Tracing with OpenTelemetry for Microservices","item":"https://jessn-dev.github.io/engineering-blog/blog/2026-09-01-distributed-tracing-diagram/"}]}</script><link rel="stylesheet" href="/engineering-blog/_astro/Header.C_vnnwUN.css"><link rel="stylesheet" href="/engineering-blog/_astro/_..Dkxr1dfN.css"></head><body data-astro-cid-tldeq5d5><header class="stripe-header" data-astro-cid-nen7h5rs><nav class="stripe-nav" data-astro-cid-nen7h5rs><div class="nav-left" data-astro-cid-nen7h5rs><a href="/engineering-blog/" class="nav-logo" aria-label="Home" data-astro-cid-nen7h5rs>jbn.blog</a><a href="/engineering-blog/" class="nav-button active" data-astro-cid-nen7h5rs><span class="hotkey" data-astro-cid-nen7h5rs>[B]</span>Blog</a><a href="/engineering-blog/about/" class="nav-button" data-astro-cid-nen7h5rs><span class="hotkey" data-astro-cid-nen7h5rs>[A]</span>About</a><a href="https://www.jbn-dev.com/" target="_blank" class="nav-button" data-astro-cid-nen7h5rs><span class="hotkey" data-astro-cid-nen7h5rs>[P]</span>Portfolio</a><a href="https://github.com/jessn-dev" target="_blank" class="nav-button" data-astro-cid-nen7h5rs><span class="hotkey" data-astro-cid-nen7h5rs>[G]</span>Github</a><a href="https://www.linkedin.com/in/jessengolab/" target="_blank" class="nav-button" data-astro-cid-nen7h5rs><span class="hotkey" data-astro-cid-nen7h5rs>[L]</span>LinkedIn</a></div></nav></header><main data-astro-cid-tldeq5d5><article class="post-layout" data-astro-cid-tldeq5d5><nav class="breadcrumb text-smallcaps" aria-label="Breadcrumb" data-astro-cid-tldeq5d5><ol data-astro-cid-tldeq5d5><li data-astro-cid-tldeq5d5><a href="/engineering-blog/" data-astro-cid-tldeq5d5>Home</a></li><li data-astro-cid-tldeq5d5><a href="/engineering-blog/blog/" data-astro-cid-tldeq5d5>Blog</a></li><li aria-current="page" data-astro-cid-tldeq5d5>Mastering Distributed Tracing with OpenTelemetry for Microservices</li></ol></nav><header class="post-hero" data-astro-cid-tldeq5d5><h1 class="post-title" data-astro-cid-tldeq5d5>Mastering Distributed Tracing with OpenTelemetry for Microservices</h1><p class="post-summary" data-astro-cid-tldeq5d5>A practical, step-by-step guide to implementing distributed tracing in microservices architectures using OpenTelemetry, enhancing observability and debugging capabilities.</p><div class="byline" data-astro-cid-qyx22t3f><span class="by" data-astro-cid-qyx22t3f>By</span><a class="author-name" href="/engineering-blog/about/" rel="author" data-astro-cid-qyx22t3f>Jesse Ngolab</a><span class="sep" data-astro-cid-qyx22t3f>/</span><time datetime="2026-09-01T17:17:44.694Z">Sep 1, 2026</time><span class="sep" data-astro-cid-qyx22t3f>/</span><span data-astro-cid-qyx22t3f>13 min read</span></div></header><div class="post-grid" data-astro-cid-tldeq5d5><aside class="post-sidebar" data-astro-cid-tldeq5d5><div class="table-header" data-astro-cid-tldeq5d5><span class="text-smallcaps" data-astro-cid-tldeq5d5>/ Metadata</span></div><div class="metadata-list" data-astro-cid-tldeq5d5><div class="metadata-item" data-astro-cid-tldeq5d5><span class="text-smallcaps label" data-astro-cid-tldeq5d5>Date Published:</span><span class="value" data-astro-cid-tldeq5d5><time datetime="2026-09-01T17:17:44.694Z">Sep 1, 2026</time></span></div><div class="metadata-item" data-astro-cid-tldeq5d5><span class="text-smallcaps label" data-astro-cid-tldeq5d5>Reading Time:</span><span class="value" data-astro-cid-tldeq5d5>13 min read</span></div><div class="metadata-item" data-astro-cid-tldeq5d5><span class="text-smallcaps label" data-astro-cid-tldeq5d5>Categories:</span><div class="tag-group" data-astro-cid-tldeq5d5><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Software Development</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Engineering</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Observability</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Microservices</span></div></div><div class="metadata-item" data-astro-cid-tldeq5d5><span class="text-smallcaps label" data-astro-cid-tldeq5d5>Tags:</span><div class="tag-group" data-astro-cid-tldeq5d5><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Distributed tracing</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>OpenTelemetry</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Microservices observability</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Context propagation</span><span class="text-smallcaps tag" data-astro-cid-tldeq5d5>Spans and traces</span></div></div></div></aside><div class="post-content-area" data-astro-cid-tldeq5d5><div class="table-header" data-astro-cid-tldeq5d5><span class="text-smallcaps" data-astro-cid-tldeq5d5>/ Article</span></div><div class="article-image-container" data-astro-cid-tldeq5d5><img src="https://images.unsplash.com/photo-1717501218456-c4789b65fc21?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w5ODY1Nzl8MHwxfHNlYXJjaHwxMHx8RGlzdHJpYnV0ZWQlMjBUcmFjaW5nJTIwRGlhZ3JhbXxlbnwwfDB8fHwxNzg4MjgzMDM3fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080" alt="Mastering Distributed Tracing with OpenTelemetry for Microservices" class="article-hero-image" width="1080" height="608" fetchpriority="high" decoding="async" onerror="this.onerror=null; this.src='https://placehold.co/1024x512/111/fff.png?text=Image+Unavailable';" data-astro-cid-tldeq5d5><div class="attribution" data-astro-cid-tldeq5d5>Photo by Google DeepMind on Unsplash</div></div><aside class="authors-note" data-astro-cid-tldeq5d5><span class="text-smallcaps label" data-astro-cid-tldeq5d5>Author's note</span><p data-astro-cid-tldeq5d5>Microservices solve scaling bottlenecks only to create blind spots when requests cross service boundaries. Traditional logging and metrics fail to reveal the root cause of latency in distributed systems. Integrating OpenTelemetry provides the specific context needed to map traces, spans, and parent IDs across every service call.</p></aside><div class="prose" data-astro-cid-tldeq5d5><p>Debugging and understanding the flow of requests in a monolithic application can be challenging. When that application evolves into a microservices architecture, the complexity multiplies significantly. A single user request might traverse dozens of services, each with its own logs and metrics. Pinpointing the root cause of latency or errors in such an environment becomes a daunting task. This is where distributed tracing provides a critical solution.</p>
+<p>Distributed tracing offers visibility into the entire lifecycle of a request as it moves through various services. It helps developers visualize the path, identify performance bottlenecks, and quickly diagnose issues across a distributed system. OpenTelemetry, an open-source observability framework, has emerged as the standard for implementing distributed tracing, along with metrics and logging. This guide provides a practical, step-by-step tutorial on integrating OpenTelemetry for distributed tracing in a microservices setup.</p>
+<h2 id="the-challenge-of-microservices-observability">The challenge of microservices observability</h2>
+<p>Microservices break down large applications into smaller, independent services. This approach offers benefits like improved scalability, resilience, and development agility. However, it introduces new operational complexities. When a user experiences a slow response or an error, determining which service or interaction caused the problem is difficult. Traditional logging, while useful for individual services, fails to provide a holistic view of a request’s journey across service boundaries. Metrics offer aggregate data but lack the granular, request-specific detail needed for deep troubleshooting.</p>
+<p>Distributed tracing bridges this gap by providing a complete, end-to-end view of a request. It allows you to see the sequence of operations, their durations, and any associated metadata, all linked together by a unique identifier.</p>
+<h2 id="core-concepts-of-distributed-tracing">Core concepts of distributed tracing</h2>
+<p>Before diving into OpenTelemetry, understanding the fundamental concepts of distributed tracing is essential.</p>
+<h3 id="traces-spans-and-context">Traces, spans, and context</h3>
+<p>A <strong>trace</strong> represents the complete journey of a single request or transaction through a distributed system. It is a directed acyclic graph (DAG) of <strong>spans</strong>.</p>
+<p>A <strong>span</strong> is a single operation within a trace. It represents a logical unit of work, such as an HTTP request, a database query, or a function call. Each span has a name, a start time, an end time, and attributes (key-value pairs) that provide additional context. Spans can have parent-child relationships, forming the structure of the trace. For example, a span representing an incoming API call might have child spans for database operations and calls to other microservices.</p>
+<p><strong>Context</strong> refers to the information that links spans together. This includes the trace ID and the parent span ID. Context propagation is the mechanism by which this information is passed between services, ensuring that all operations related to a single request are correctly grouped into a single trace.</p>
+<h3 id="trace-id-span-id-and-parent-span-id">Trace ID, span ID, and parent span ID</h3>
+<ul>
+<li><strong>Trace ID:</strong> A unique identifier for an entire trace. All spans belonging to the same trace share the same trace ID.</li>
+<li><strong>Span ID:</strong> A unique identifier for a specific span within a trace.</li>
+<li><strong>Parent Span ID:</strong> The span ID of the parent operation. This establishes the hierarchical relationship between spans, allowing a tracing backend to reconstruct the trace graph.</li>
+</ul>
+<figure style="text-align: center; margin: 2.5rem 0;">
+  <img src="https://images.unsplash.com/photo-1717501218456-c4789b65fc21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5ODY1Nzl8MHwxfHNlYXJjaHwxMHx8RGlzdHJpYnV0ZWQlMjBUcmFjaW5nJTIwRGlhZ3JhbXxlbnwwfDB8fHwxNzg4MjgzMDM3fDA&ixlib=rb-4.1.0&q=80&w=1080" alt="Distributed Tracing Diagram" style="max-width: 100%; max-height: 500px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); display: block; margin: 0 auto;" onerror="this.onerror=null; this.src='https://placehold.co/1024x512/1e1b4b/818cf8.png?text=Image+Unavailable';" />
+  <figcaption style="font-size: 0.85em; color: var(--text-muted); font-style: italic; margin-top: 1rem;">Photo by Google DeepMind on Unsplash</figcaption>
+</figure>
+<h2 id="understanding-opentelemetry">Understanding OpenTelemetry</h2>
+<p>OpenTelemetry is a vendor-neutral set of APIs, SDKs, and tools designed to instrument, generate, collect, and export telemetry data (traces, metrics, and logs). It provides a standardized way to instrument applications, freeing developers from vendor lock-in and allowing them to choose their preferred observability backend.</p>
+<h3 id="opentelemetry-architecture">OpenTelemetry architecture</h3>
+<p>The OpenTelemetry architecture consists of several key components:</p>
+<ol>
+<li><strong>API (Application Programming Interface):</strong> Defines how telemetry data is created. This includes interfaces for creating traces, spans, and metrics.</li>
+<li><strong>SDK (Software Development Kit):</strong> Implements the API and provides the logic for processing and exporting telemetry data. This is where you configure things like samplers, processors, and exporters.</li>
+<li><strong>Instrumentation Libraries:</strong> These are pre-built libraries that automatically instrument popular frameworks, databases, and HTTP clients. They reduce the amount of manual code developers need to write.</li>
+<li><strong>Collector:</strong> An optional but highly recommended component. The OpenTelemetry Collector is a proxy that receives, processes, and exports telemetry data. It can receive data in various formats, perform transformations, and send it to multiple backends. Using a collector decouples your application from the specifics of the observability backend.</li>
+<li><strong>Exporters:</strong> Components within the SDK or Collector that send telemetry data to an observability backend (e.g., Jaeger, Zipkin, Prometheus, Datadog).</li>
+</ol>
+<h3 id="instrumentation-automatic-versus-manual">Instrumentation: automatic versus manual</h3>
+<p>OpenTelemetry supports two main approaches to instrumentation:</p>
+<ul>
+<li><strong>Automatic Instrumentation:</strong> This uses pre-built libraries that automatically instrument common frameworks, libraries, and protocols (like HTTP, gRPC, database drivers). It requires minimal code changes and is ideal for getting started quickly.</li>
+<li><strong>Manual Instrumentation:</strong> This involves explicitly adding OpenTelemetry API calls to your code. It provides fine-grained control over what is traced and allows you to add custom spans and attributes for specific business logic. A combination of both is often used, with automatic instrumentation providing baseline coverage and manual instrumentation adding depth where needed.</li>
+</ul>
+<h2 id="setting-up-a-basic-tracing-environment">Setting up a basic tracing environment</h2>
+<p>To demonstrate OpenTelemetry in action, we will set up a simple microservices environment. We will use two Python Flask services, <code>service-a</code> and <code>service-b</code>, where <code>service-a</code> makes an HTTP call to <code>service-b</code>. We will use Docker Compose to orchestrate these services along with an OpenTelemetry Collector and Jaeger as our tracing backend.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Docker and Docker Compose installed.</li>
+<li>Python 3.8+ installed.</li>
+</ul>
+<h3 id="project-structure">Project structure</h3>
+<p>Create a directory named <code>otel-tracing-example</code> and set up the following structure:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>otel-tracing-example/</span></span>
+<span class="line"><span>├── docker-compose.yaml</span></span>
+<span class="line"><span>├── service-a/</span></span>
+<span class="line"><span>│   ├── app.py</span></span>
+<span class="line"><span>│   └── requirements.txt</span></span>
+<span class="line"><span>└── service-b/</span></span>
+<span class="line"><span>    ├── app.py</span></span>
+<span class="line"><span>    └── requirements.txt</span></span></code></pre>
+<h3 id="docker-compose-configuration">Docker Compose configuration</h3>
+<p>Create <code>docker-compose.yaml</code> in the root directory:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">version</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'3.8'</span></span>
+<span class="line"><span style="color:#85E89D">services</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  jaeger</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    image</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">jaegertracing/all-in-one:1.55</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"16686:16686"</span><span style="color:#6A737D"> # Jaeger UI</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"4317:4317"</span><span style="color:#6A737D">   # OTLP gRPC receiver</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"4318:4318"</span><span style="color:#6A737D">   # OTLP HTTP receiver</span></span>
+<span class="line"><span style="color:#85E89D">    environment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">COLLECTOR_OTLP_ENABLED=true</span></span>
+<span class="line"><span style="color:#85E89D">    networks</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">otel-network</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">  otel-collector</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    image</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">otel/opentelemetry-collector:0.90.1</span></span>
+<span class="line"><span style="color:#85E89D">    command</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"--config=/etc/otel-collector-config.yaml"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#85E89D">    volumes</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">./otel-collector-config.yaml:/etc/otel-collector-config.yaml</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"6831:6831/udp"</span><span style="color:#6A737D"> # Jaeger receiver</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"4317:4317"</span><span style="color:#6A737D">     # OTLP gRPC receiver</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"4318:4318"</span><span style="color:#6A737D">     # OTLP HTTP receiver</span></span>
+<span class="line"><span style="color:#85E89D">    depends_on</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">jaeger</span></span>
+<span class="line"><span style="color:#85E89D">    networks</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">otel-network</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">  service-a</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    build</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">./service-a</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"5000:5000"</span></span>
+<span class="line"><span style="color:#85E89D">    environment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">OTEL_RESOURCE_ATTRIBUTES=service.name=service-a</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">SERVICE_B_URL=http://service-b:5001/hello</span></span>
+<span class="line"><span style="color:#85E89D">    depends_on</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">otel-collector</span></span>
+<span class="line"><span style="color:#85E89D">    networks</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">otel-network</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">  service-b</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    build</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">./service-b</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"5001:5001"</span></span>
+<span class="line"><span style="color:#85E89D">    environment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">OTEL_RESOURCE_ATTRIBUTES=service.name=service-b</span></span>
+<span class="line"><span style="color:#85E89D">    depends_on</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">otel-collector</span></span>
+<span class="line"><span style="color:#85E89D">    networks</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">otel-network</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">networks</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  otel-network</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    driver</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">bridge</span></span></code></pre>
+<p>Create <code>otel-collector-config.yaml</code> in the root directory:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">receivers</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  otlp</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    protocols</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      grpc</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      http</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">exporters</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  otlp</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    endpoint</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">jaeger:4317</span></span>
+<span class="line"><span style="color:#85E89D">    tls</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      insecure</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">service</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  pipelines</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    traces</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      receivers</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">otlp</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#85E89D">      exporters</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">otlp</span><span style="color:#E1E4E8">]</span></span></code></pre>
+<p>This configuration sets up:</p>
+<ul>
+<li><strong>Jaeger:</strong> The tracing backend and UI.</li>
+<li><strong>OpenTelemetry Collector:</strong> Receives OTLP (OpenTelemetry Protocol) data from our services and exports it to Jaeger.</li>
+<li><strong>Service A &amp; B:</strong> Our Python Flask applications.</li>
+</ul>
+<h2 id="step-by-step-implementation">Step-by-step implementation</h2>
+<h3 id="step-1-project-setup-and-dependencies">Step 1: Project setup and dependencies</h3>
+<p><strong>service-a/requirements.txt:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Flask==2.3.3</span></span>
+<span class="line"><span>requests==2.31.0</span></span>
+<span class="line"><span>opentelemetry-api==1.22.0</span></span>
+<span class="line"><span>opentelemetry-sdk==1.22.0</span></span>
+<span class="line"><span>opentelemetry-exporter-otlp==1.22.0</span></span>
+<span class="line"><span>opentelemetry-instrumentation-flask==0.43b0</span></span>
+<span class="line"><span>opentelemetry-instrumentation-requests==0.43b0</span></span></code></pre>
+<p><strong>service-b/requirements.txt:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Flask==2.3.3</span></span>
+<span class="line"><span>opentelemetry-api==1.22.0</span></span>
+<span class="line"><span>opentelemetry-sdk==1.22.0</span></span>
+<span class="line"><span>opentelemetry-exporter-otlp==1.22.0</span></span>
+<span class="line"><span>opentelemetry-instrumentation-flask==0.43b0</span></span></code></pre>
+<h3 id="step-2-instrumenting-service-a">Step 2: Instrumenting service-a</h3>
+<p><strong>service-a/app.py:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> os</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> requests</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> flask </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Flask</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> trace</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.resources </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Resource</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.trace </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> TracerProvider</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.trace.export </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> BatchSpanProcessor</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.exporter.otlp.proto.grpc.trace_exporter </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> OTLPSpanExporter</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.instrumentation.flask </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> FlaskInstrumentor</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.instrumentation.requests </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> RequestsInstrumentor</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Configure OpenTelemetry</span></span>
+<span class="line"><span style="color:#E1E4E8">resource </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Resource.create({</span></span>
+<span class="line"><span style="color:#9ECBFF">    "service.name"</span><span style="color:#E1E4E8">: os.environ.get(</span><span style="color:#9ECBFF">"OTEL_RESOURCE_ATTRIBUTES"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"service-a-default"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#9ECBFF">    "application"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"my-microservice-app"</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">trace.set_tracer_provider(</span></span>
+<span class="line"><span style="color:#E1E4E8">    TracerProvider(</span><span style="color:#FFAB70">resource</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">resource)</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">tracer </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> trace.get_tracer(</span><span style="color:#79B8FF">__name__</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Configure OTLP exporter to send data to the collector</span></span>
+<span class="line"><span style="color:#E1E4E8">otlp_exporter </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> OTLPSpanExporter(</span></span>
+<span class="line"><span style="color:#FFAB70">    endpoint</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">os.environ.get(</span><span style="color:#9ECBFF">"OTEL_EXPORTER_OTLP_ENDPOINT"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"http://localhost:4317"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#FFAB70">    insecure</span><span style="color:#F97583">=</span><span style="color:#79B8FF">True</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">span_processor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> BatchSpanProcessor(otlp_exporter)</span></span>
+<span class="line"><span style="color:#E1E4E8">trace.get_tracer_provider().add_span_processor(span_processor)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Flask(</span><span style="color:#79B8FF">__name__</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Instrument Flask and Requests</span></span>
+<span class="line"><span style="color:#E1E4E8">FlaskInstrumentor().instrument_app(app)</span></span>
+<span class="line"><span style="color:#E1E4E8">RequestsInstrumentor().instrument()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">SERVICE_B_URL</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> os.environ.get(</span><span style="color:#9ECBFF">"SERVICE_B_URL"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"http://localhost:5001/hello"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@app.route</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> home</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> tracer.start_as_current_span(</span><span style="color:#9ECBFF">"home-request"</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#9ECBFF"> "Hello from Service A!"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@app.route</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/call-service-b"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> call_service_b</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> tracer.start_as_current_span(</span><span style="color:#9ECBFF">"call-service-b-endpoint"</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#79B8FF">        print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Calling Service B at: </span><span style="color:#79B8FF">{SERVICE_B_URL}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">            response </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> requests.get(</span><span style="color:#79B8FF">SERVICE_B_URL</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            response.raise_for_status()</span></span>
+<span class="line"><span style="color:#E1E4E8">            message </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> response.text</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"Service A called Service B: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">message</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#E1E4E8"> requests.exceptions.RequestException </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"Error calling Service B: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">e</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">500</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#79B8FF"> __name__</span><span style="color:#F97583"> ==</span><span style="color:#9ECBFF"> "__main__"</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    app.run(</span><span style="color:#FFAB70">host</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"0.0.0.0"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">port</span><span style="color:#F97583">=</span><span style="color:#79B8FF">5000</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p><strong>Explanation for <code>service-a/app.py</code>:</strong></p>
+<ol>
+<li><strong>Resource Configuration:</strong> We define a <code>Resource</code> to attach metadata like <code>service.name</code> to all telemetry data from this service. This helps identify the source of traces in the backend.</li>
+<li><strong>TracerProvider Setup:</strong> <code>TracerProvider</code> is the entry point for all tracing operations. We set it globally.</li>
+<li><strong>OTLP Exporter:</strong> <code>OTLPSpanExporter</code> sends spans to the OpenTelemetry Collector using the OTLP gRPC protocol. The endpoint is configured via an environment variable.</li>
+<li><strong>BatchSpanProcessor:</strong> This processor batches spans before exporting them, which is more efficient than sending each span individually.</li>
+<li><strong>Instrumentation:</strong> <code>FlaskInstrumentor().instrument_app(app)</code> automatically instruments incoming Flask requests, creating spans for them. <code>RequestsInstrumentor().instrument()</code> instruments outgoing <code>requests</code> calls, ensuring context propagation to <code>service-b</code>.</li>
+<li><strong>Manual Span:</strong> The <code>with tracer.start_as_current_span(...)</code> block demonstrates how to create a custom span around specific logic, providing more granular detail within a trace.</li>
+</ol>
+<h3 id="step-3-instrumenting-service-b">Step 3: Instrumenting service-b</h3>
+<p><strong>service-b/app.py:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> os</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> flask </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Flask</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> trace</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.resources </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Resource</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.trace </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> TracerProvider</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.trace.export </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> BatchSpanProcessor</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.exporter.otlp.proto.grpc.trace_exporter </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> OTLPSpanExporter</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.instrumentation.flask </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> FlaskInstrumentor</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Configure OpenTelemetry</span></span>
+<span class="line"><span style="color:#E1E4E8">resource </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Resource.create({</span></span>
+<span class="line"><span style="color:#9ECBFF">    "service.name"</span><span style="color:#E1E4E8">: os.environ.get(</span><span style="color:#9ECBFF">"OTEL_RESOURCE_ATTRIBUTES"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"service-b-default"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#9ECBFF">    "application"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"my-microservice-app"</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">trace.set_tracer_provider(</span></span>
+<span class="line"><span style="color:#E1E4E8">    TracerProvider(</span><span style="color:#FFAB70">resource</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">resource)</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">tracer </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> trace.get_tracer(</span><span style="color:#79B8FF">__name__</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Configure OTLP exporter to send data to the collector</span></span>
+<span class="line"><span style="color:#E1E4E8">otlp_exporter </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> OTLPSpanExporter(</span></span>
+<span class="line"><span style="color:#FFAB70">    endpoint</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">os.environ.get(</span><span style="color:#9ECBFF">"OTEL_EXPORTER_OTLP_ENDPOINT"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"http://localhost:4317"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#FFAB70">    insecure</span><span style="color:#F97583">=</span><span style="color:#79B8FF">True</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">span_processor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> BatchSpanProcessor(otlp_exporter)</span></span>
+<span class="line"><span style="color:#E1E4E8">trace.get_tracer_provider().add_span_processor(span_processor)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Flask(</span><span style="color:#79B8FF">__name__</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Instrument Flask</span></span>
+<span class="line"><span style="color:#E1E4E8">FlaskInstrumentor().instrument_app(app)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@app.route</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/hello"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> hello</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> tracer.start_as_current_span(</span><span style="color:#9ECBFF">"hello-from-service-b"</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#9ECBFF"> "Hello from Service B!"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#79B8FF"> __name__</span><span style="color:#F97583"> ==</span><span style="color:#9ECBFF"> "__main__"</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    app.run(</span><span style="color:#FFAB70">host</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"0.0.0.0"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">port</span><span style="color:#F97583">=</span><span style="color:#79B8FF">5001</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p><strong>Explanation for <code>service-b/app.py</code>:</strong>
+The setup for <code>service-b</code> is similar to <code>service-a</code>, focusing on Flask instrumentation. When <code>service-a</code> calls <code>service-b</code>, the <code>RequestsInstrumentor</code> in <code>service-a</code> automatically injects tracing context into the HTTP headers. The <code>FlaskInstrumentor</code> in <code>service-b</code> then reads this context, allowing <code>service-b</code> to continue the trace started by <code>service-a</code>. This is the essence of context propagation.</p>
+<h3 id="step-4-running-with-a-collector-and-backend">Step 4: Running with a collector and backend</h3>
+<p>Navigate to the <code>otel-tracing-example</code> directory in your terminal and run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> compose</span><span style="color:#9ECBFF"> up</span><span style="color:#79B8FF"> --build</span></span></code></pre>
+<p>This command builds the Docker images for <code>service-a</code> and <code>service-b</code>, and starts all the services defined in <code>docker-compose.yaml</code>.</p>
+<h3 id="step-5-verifying-traces">Step 5: Verifying traces</h3>
+<p>Once all services are running:</p>
+<ol>
+<li>
+<p><strong>Access Service A:</strong> Open your browser or use <code>curl</code> to hit <code>service-a</code>’s endpoint that calls <code>service-b</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">curl</span><span style="color:#9ECBFF"> http://localhost:5000/call-service-b</span></span></code></pre>
+<p>You should see a response like: “Service A called Service B: Hello from Service B!”</p>
+</li>
+<li>
+<p><strong>Access Jaeger UI:</strong> Open your browser and navigate to <code>http://localhost:16686</code>.</p>
+</li>
+<li>
+<p><strong>Find Traces:</strong> In the Jaeger UI, select “service-a” from the “Service” dropdown and click “Find Traces”. You should see traces corresponding to your requests.</p>
+<p>Click on a trace to view its details. You will see a <a href="https://brycemecum.com/2023/03/31/til-mermaid-tracing/">waterfall diagram</a> showing the sequence of spans:</p>
+<ul>
+<li>An initial span for the incoming request to <code>service-a</code>.</li>
+<li>A child span for the <code>call-service-b-endpoint</code> in <code>service-a</code>.</li>
+<li>A child span for the outgoing HTTP request from <code>service-a</code> to <code>service-b</code>.</li>
+<li>A span for the incoming request to <code>service-b</code>.</li>
+<li>A child span for <code>hello-from-service-b</code> in <code>service-b</code>.</li>
+</ul>
+<p>This visualization clearly shows the entire request flow, including the time spent in each service and operation. You can inspect individual spans to see their attributes, which provide valuable context for debugging.</p>
+</li>
+</ol>
+<figure style="text-align: center; margin: 2.5rem 0;">
+  <img src="https://images.pexels.com/photos/16027821/pexels-photo-16027821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Jaeger UI Trace View" style="max-width: 100%; max-height: 500px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); display: block; margin: 0 auto;" onerror="this.onerror=null; this.src='https://placehold.co/1024x512/1e1b4b/818cf8.png?text=Image+Unavailable';" />
+  <figcaption style="font-size: 0.85em; color: var(--text-muted); font-style: italic; margin-top: 1rem;">Photo by Matheus Bertelli on Pexels</figcaption>
+</figure>
+<h2 id="advanced-considerations">Advanced considerations</h2>
+<h3 id="sampling-strategies">Sampling strategies</h3>
+<p>Collecting every single trace can generate a massive amount of data, especially in high-traffic systems. OpenTelemetry supports <strong>sampling</strong> to reduce the volume of telemetry data. Samplers decide whether a trace should be recorded or dropped at the beginning of its lifecycle. Common strategies include:</p>
+<ul>
+<li><strong>AlwaysOnSampler:</strong> Records all traces. Useful for development and low-traffic environments.</li>
+<li><strong>AlwaysOffSampler:</strong> Records no traces.</li>
+<li><strong>ParentBasedSampler:</strong> Respects the sampling decision of the parent span.</li>
+<li><strong>TraceIdRatioBasedSampler:</strong> Samples a certain percentage of traces based on their trace ID.</li>
+</ul>
+<p>You configure samplers in your <code>TracerProvider</code>.</p>
+<h3 id="adding-custom-attributes">Adding custom attributes</h3>
+<p>Attributes are key-value pairs that provide additional context to spans. You can add custom attributes to spans to include business-specific information, such as user IDs, order IDs, or specific function parameters. This enriches your traces and makes them more useful for debugging.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> trace</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">tracer </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> trace.get_tracer(</span><span style="color:#79B8FF">__name__</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@app.route</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/process-order/&#x3C;order_id>"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> process_order</span><span style="color:#E1E4E8">(order_id):</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> tracer.start_as_current_span(</span><span style="color:#9ECBFF">"process-order-endpoint"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> span:</span></span>
+<span class="line"><span style="color:#E1E4E8">        span.set_attribute(</span><span style="color:#9ECBFF">"order.id"</span><span style="color:#E1E4E8">, order_id)</span></span>
+<span class="line"><span style="color:#E1E4E8">        span.set_attribute(</span><span style="color:#9ECBFF">"user.id"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"some_user_123"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#6A737D">        # ... rest of your order processing logic</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"Processing order </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">order_id</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h3 id="error-handling-and-events">Error handling and events</h3>
+<p>OpenTelemetry allows you to record exceptions and events within spans. This is crucial for understanding when and where errors occur in a distributed system.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> sys</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> trace</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> opentelemetry.sdk.trace </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> SpanKind, StatusCode</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">tracer </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> trace.get_tracer(</span><span style="color:#79B8FF">__name__</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@app.route</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/risky-operation"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> risky_operation</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> tracer.start_as_current_span(</span><span style="color:#9ECBFF">"risky-operation"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">kind</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">SpanKind.</span><span style="color:#79B8FF">SERVER</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> span:</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D">            # Simulate an error</span></span>
+<span class="line"><span style="color:#E1E4E8">            result </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> /</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"Operation successful: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">result</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#79B8FF"> Exception</span><span style="color:#F97583"> as</span><span style="color:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#E1E4E8">            span.set_status(StatusCode.</span><span style="color:#79B8FF">ERROR</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">description</span><span style="color:#F97583">=</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">(e))</span></span>
+<span class="line"><span style="color:#E1E4E8">            span.record_exception(e)</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"Operation failed: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">e</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">500</span></span></code></pre>
+<p>Setting the span status to <code>ERROR</code> and recording the exception provides clear indicators in your tracing backend that something went wrong.</p>
+<h3 id="integration-with-other-observability-signals">Integration with other observability signals</h3>
+<p>While this guide focuses on tracing, OpenTelemetry also supports metrics and logs. A complete observability strategy integrates all three. Traces provide the request-level detail, metrics offer aggregate performance data, and logs give detailed event information. OpenTelemetry aims to provide a unified approach to collecting all these signals, allowing for powerful correlations and comprehensive system understanding.</p>
+<h2 id="benefits-and-best-practices">Benefits and best practices</h2>
+<p>Implementing distributed tracing with OpenTelemetry offers significant advantages:</p>
+<ul>
+<li><strong>Faster root cause analysis:</strong> Quickly identify which service or component is causing latency or errors.</li>
+<li><strong>Performance optimization:</strong> Pinpoint bottlenecks and areas for improvement in your request flows.</li>
+<li><strong>Understanding service dependencies:</strong> Visualize how services interact and depend on each other.</li>
+<li><strong>Improved developer experience:</strong> Developers gain better insights into their code’s behavior in a distributed environment.</li>
+</ul>
+<p>For best practices, ensure consistent instrumentation across all services. Use automatic instrumentation for common libraries and frameworks, and supplement with manual instrumentation for critical business logic. Leverage the OpenTelemetry Collector to centralize data processing and export, providing flexibility and resilience. Regularly review your traces to understand system behavior and identify potential issues proactively.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Distributed tracing is an indispensable tool for managing the complexity of modern microservices architectures. OpenTelemetry provides a powerful, standardized, and vendor-neutral way to implement this crucial observability practice. By following the steps outlined in this guide, developers can gain deep insights into their distributed systems, leading to faster debugging, improved performance, and a more robust application environment. Embracing OpenTelemetry is a strategic move towards building more resilient and understandable software.</p>
+<h2 id="works-cited">Works Cited</h2>
+<ul>
+<li>“Mermaid Gantt diagrams for displaying distributed traces in Markdown (2023).” <em>brycemecum.com</em>, <a href="https://brycemecum.com/2023/03/31/til-mermaid-tracing/">https://brycemecum.com/2023/03/31/til-mermaid-tracing/</a></li>
+</ul>
+</div><div class="share" data-astro-cid-x2g37gv3><span class="text-smallcaps label" data-astro-cid-x2g37gv3>Share</span><ul data-astro-cid-x2g37gv3><li data-astro-cid-x2g37gv3><a href="https://twitter.com/intent/tweet?text=Mastering%20Distributed%20Tracing%20with%20OpenTelemetry%20for%20Microservices&amp;url=https%3A%2F%2Fjessn-dev.github.io%2Fengineering-blog%2Fblog%2F2026-09-01-distributed-tracing-diagram%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X" data-astro-cid-x2g37gv3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-x2g37gv3><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-x2g37gv3></path></svg></a></li><li data-astro-cid-x2g37gv3><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjessn-dev.github.io%2Fengineering-blog%2Fblog%2F2026-09-01-distributed-tracing-diagram%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" data-astro-cid-x2g37gv3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-x2g37gv3><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" data-astro-cid-x2g37gv3></path></svg></a></li></ul></div><section class="related" data-astro-cid-tldeq5d5><div class="table-header" data-astro-cid-tldeq5d5><span class="text-smallcaps" data-astro-cid-tldeq5d5>/ Keep reading</span></div><div class="related-list" data-astro-cid-tldeq5d5><a class="related-card" href="/engineering-blog/blog/2026-08-25-message-broker-architecture/" data-astro-cid-tldeq5d5><h3 data-astro-cid-tldeq5d5>Achieving Asynchronous Communication and Decoupling with Message Queues in Distributed Systems</h3><p data-astro-cid-tldeq5d5>Explore the fundamental principles and practical implementation of message queues to build resilient, scalable, and decoupled distributed systems through asynchronous communication patterns.</p></a><a class="related-card" href="/engineering-blog/blog/2026-08-11-software-architecture-diagram/" data-astro-cid-tldeq5d5><h3 data-astro-cid-tldeq5d5>Mastering Dependency Injection in .NET Core: A Practical Guide</h3><p data-astro-cid-tldeq5d5>Explore the principles and practical implementation of Dependency Injection in .NET Core applications, focusing on improved testability, maintainability, and modular design.</p></a><a class="related-card" href="/engineering-blog/blog/2026-08-08-software-code-editor/" data-astro-cid-tldeq5d5><h3 data-astro-cid-tldeq5d5>Mastering Code Improvement: A Review of Refactoring, Second Edition</h3><p data-astro-cid-tldeq5d5>An in-depth review of Martin Fowler&#39;s &#39;Refactoring: Improving the Design of Existing Code, Second Edition,&#39; exploring its core concepts, relevance, and practical takeaways for developers.</p></a></div></section></div></div></article></main><footer data-astro-cid-jo6i4kqk>&copy; 2026 Jesse Ngolab. All rights reserved.<div class="social-links" data-astro-cid-jo6i4kqk><a href="https://www.jbn-dev.com/" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Visit my Portfolio</span><svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-jo6i4kqk><circle cx="12" cy="12" r="10" data-astro-cid-jo6i4kqk></circle><line x1="2" y1="12" x2="22" y2="12" data-astro-cid-jo6i4kqk></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-jo6i4kqk></path></svg></a><a href="https://github.com/jessn-dev" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Go to my GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-jo6i4kqk></path></svg></a><a href="https://www.linkedin.com/in/jessengolab/" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Connect with me on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32" fill="currentColor" data-astro-cid-jo6i4kqk><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" data-astro-cid-jo6i4kqk></path></svg></a></div></footer></body></html>
